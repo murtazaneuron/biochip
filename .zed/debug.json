@@ -1,0 +1,191 @@
+// Zed debug launch configurations for biochip
+// Adapter: CodeLLDB  |  Language: Rust (edition 2024, MSRV 1.85.0)
+//
+// Usage
+//   Cmd+Shift+D (macOS) / Ctrl+Shift+D (Linux/Win) → pick a configuration
+//
+// Notes
+//   • `build` runs before the debugger attaches; failure aborts launch.
+//   • `args` are passed to the binary after the executable path.
+//   • Example binaries live at target/debug/examples/<name>.
+//   • To debug tests, run `cargo test --no-run` first to discover the
+//     deterministic binary path, then attach with "Attach to process".
+//   • sourceLanguages: ["rust"] is required for CodeLLDB source mapping.
+[
+    // ── Build-only launches (no subcommand args) ───────────────────────────────
+
+    {
+        // Standard debug build - breakpoints across all source files.
+        "label": "Build & Debug (debug)",
+        "build": {
+            "command": "cargo",
+            "args": ["build"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/biochip",
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    {
+        // Optimised release build - closer to production behaviour.
+        "label": "Build & Debug (release)",
+        "build": {
+            "command": "cargo",
+            "args": ["build", "--release"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/release/biochip",
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    {
+        // Debug build with the optional rig-core LLM backend compiled in.
+        "label": "Build & Debug (ai-agent feature)",
+        "build": {
+            "command": "cargo",
+            "args": ["build", "--features", "ai-agent"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/biochip",
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    // ── run subcommand - demo mode (no API key required) ──────────────────────
+
+    {
+        // Demo mode: 5 cycles, deterministic simulated LLM responses.
+        "label": "Debug: run --demo --cycles 5",
+        "build": {
+            "command": "cargo",
+            "args": ["build"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/biochip",
+        "args": ["run", "--demo", "--cycles", "5"],
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    {
+        // Demo mode: 10 cycles - exercises the full cycle loop.
+        "label": "Debug: run --demo --cycles 10",
+        "build": {
+            "command": "cargo",
+            "args": ["build"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/biochip",
+        "args": ["run", "--demo", "--cycles", "10"],
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    // ── run subcommand - live inference (ANTHROPIC_API_KEY required) ──────────
+
+    {
+        // Live curl inference, 10 cycles. Requires ANTHROPIC_API_KEY in .env.
+        "label": "Debug: run live --cycles 10 (curl backend)",
+        "build": {
+            "command": "cargo",
+            "args": ["build"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/biochip",
+        "args": ["run", "--cycles", "10"],
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    {
+        // Live rig-core inference (release), 10 cycles. Requires ANTHROPIC_API_KEY.
+        "label": "Debug: run live --cycles 10 (rig-core backend, release)",
+        "build": {
+            "command": "cargo",
+            "args": ["build", "--release", "--features", "ai-agent"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/release/biochip",
+        "args": ["run", "--cycles", "10"],
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    // ── verify subcommand ──────────────────────────────────────────────────────
+
+    {
+        // Offline ECDSA verification of cycle_001.json.
+        "label": "Debug: verify signed_outputs/cycle_001.json",
+        "build": {
+            "command": "cargo",
+            "args": ["build"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/biochip",
+        "args": ["verify", "signed_outputs/cycle_001.json"],
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    // ── Example binaries ───────────────────────────────────────────────────────
+
+    {
+        // Sensor fusion table - no API key needed.
+        "label": "Debug: example sensors_demo",
+        "build": {
+            "command": "cargo",
+            "args": ["build", "--example", "sensors_demo"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/examples/sensors_demo",
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    {
+        // ECDSA sign / verify / tamper-detection walkthrough - no API key needed.
+        "label": "Debug: example provenance_demo",
+        "build": {
+            "command": "cargo",
+            "args": ["build", "--example", "provenance_demo"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/examples/provenance_demo",
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    {
+        // Agent demo with deterministic fallback - no API key needed.
+        "label": "Debug: example agent_demo (demo fallback)",
+        "build": {
+            "command": "cargo",
+            "args": ["build", "--example", "agent_demo"],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/examples/agent_demo",
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+
+    {
+        // Agent demo with live rig-core backend. Requires ANTHROPIC_API_KEY.
+        "label": "Debug: example agent_demo (ai-agent feature, live)",
+        "build": {
+            "command": "cargo",
+            "args": [
+                "build",
+                "--example",
+                "agent_demo",
+                "--features",
+                "ai-agent",
+            ],
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/examples/agent_demo",
+        "sourceLanguages": ["rust"],
+        "request": "launch",
+        "adapter": "CodeLLDB",
+    },
+]
