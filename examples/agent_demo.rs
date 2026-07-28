@@ -15,7 +15,7 @@
 //! ```
 
 /// A demo of the bio-chip agent using ARC sensor fusion.
-use polar_bear_biochip::{agent::BioChipAgent, sensors::fusion::SensorFusion};
+use biochip::{agent::BioChipAgent, sensors::fusion::SensorFusion};
 
 /// Runs the bio-chip agent demo using ARC sensor fusion.
 ///

@@ -1,24 +1,15 @@
 [package]
-name        = "biochip"
-version     = "0.1.1"
-edition     = "2024"
-rust-version = "1.85.0"
-authors     = ["Murtaza Ali Imtiaz <very.kool.king@gmail.com>"]
-description = "Bio-chip intelligence framework: multi-sensor EEG+motion fusion + rig-core LLM orchestration + ECDSA-signed data provenance"
-license     = "MIT OR Apache-2.0"
-repository  = "https://github.com/murtazaai/biochip"
-keywords    = ["biochip", "bci", "rig", "ecdsa", "sensor-fusion"]
-categories  = ["science", "cryptography"]
-readme      = "README.md"
-
-
-[lib]
-name = "polar_bear_biochip"
-path = "src/lib.rs"
-
-[[bin]]
 name = "biochip"
-path = "src/main.rs"
+version = "0.1.1"
+edition = "2024"
+rust-version = "1.85.0"
+authors = ["Murtaza Ali Imtiaz <very.kool.king@gmail.com>"]
+description = "Bio-chip intelligence framework: multi-sensor EEG+motion fusion + rig-core LLM orchestration + ECDSA-signed data provenance"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/murtazaai/biochip"
+keywords = ["bci", "biochip", "ecdsa", "rig", "sensor-fusion"]
+categories = ["cryptography", "science"]
+readme = "README.md"
 
 # Docs.rs - build all features, inject the docsrs cfg flag so conditional items
 # are visible in the hosted documentation.
@@ -26,23 +17,13 @@ path = "src/main.rs"
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
-# Workspace-wide lints - mirrors the rig upstream lint table.
-[lints.rust]
-unused       = "warn"
-missing_docs = "warn"
+[lib]
+name = "biochip"
+path = "src/lib.rs"
 
-[lints.clippy]
-all      = { level = "warn", priority = -1 }
-pedantic = { level = "warn", priority = -1 }
-# Allow common false-positive pedantic lints.
-module_name_repetitions = "allow"
-must_use_candidate      = "allow"
-missing_errors_doc      = "allow"
-
-# ── FEATURES ──────────────────────────────────────────────────────────────────
-[features]
-default  = []
-ai-agent = ["dep:rig-core", "dep:dotenvy"]
+[[bin]]
+name = "biochip"
+path = "src/main.rs"
 
 # ── CORE AI (ARC) - optional ──────────────────────────────────────────────────
 [dependencies]
@@ -53,25 +34,25 @@ rig-core = { version = "^0.37", features = ["rustls"], optional = true }
 tokio = { version = "^1", features = ["full"] }
 
 # ── CRYPTOGRAPHY ──────────────────────────────────────────────────────────────
-k256 = { version = "^0.13", features = ["ecdsa", "sha256", "arithmetic"] }
+k256 = { version = "^0.13", features = ["arithmetic", "ecdsa", "sha256"] }
 sha2 = "^0.10"
 
 # ── ENCODING ──────────────────────────────────────────────────────────────────
 hex = "^0.4"
 
 # ── SERIALIZATION ─────────────────────────────────────────────────────────────
-serde      = { version = "^1", features = ["derive"] }
+serde = { version = "^1", features = ["derive"] }
 serde_json = "^1"
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 clap = { version = "^4", features = ["derive"] }
 
 # ── LOGGING ───────────────────────────────────────────────────────────────────
-tracing            = "^0.1"
+tracing = "^0.1"
 tracing-subscriber = { version = "^0.3", features = ["env-filter", "fmt"] }
 
 # ── ERROR HANDLING ────────────────────────────────────────────────────────────
-anyhow    = "^1"
+anyhow = "^1"
 thiserror = "^2"
 
 # ── TIME ──────────────────────────────────────────────────────────────────────
@@ -87,14 +68,32 @@ dotenvy = { version = "^0.15", optional = true }
 # ── DEV / TEST ────────────────────────────────────────────────────────────────
 [dev-dependencies]
 pretty_assertions = "^1"
-tokio-test        = "^0.4"
+tokio-test = "^0.4"
+
+# ── FEATURES ──────────────────────────────────────────────────────────────────
+[features]
+default = []
+ai-agent = ["dep:dotenvy", "dep:rig-core"]
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+missing_errors_doc = "allow"
+# Allow common false-positive pedantic lints.
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+pedantic = { level = "warn", priority = -1 }
+
+# Workspace-wide lints - mirrors the rig upstream lint table.
+[lints.rust]
+missing_docs = "warn"
+unused = "warn"
 
 # ── RELEASE PROFILE ───────────────────────────────────────────────────────────
 # Mirrors rig's workspace release profile: maximise performance and
 # minimise binary size through LTO and single-codegen-unit compilation.
 [profile.release]
-opt-level     = 3
-lto           = true
+opt-level = 3
+strip = "debuginfo"
+lto = true
+panic = "abort"
 codegen-units = 1
-panic         = "abort"
-strip         = "debuginfo"

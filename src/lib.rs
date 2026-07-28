@@ -26,7 +26,7 @@
 //! ## Usage
 //!
 //! ```rust,no_run
-//! use polar_bear_biochip::{
+//! use biochip::{
 //!     sensors::fusion::SensorFusion,
 //!     provenance::ecdsa_signer::EcdsaSigner,
 //! };

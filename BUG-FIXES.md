@@ -127,11 +127,11 @@ after signing, demonstrating that verification never touches private material.
 ## Fix #20 — Missing `[lib]` target (crate not usable as library dependency)
 
 **Stage:** 08 — Publication
-**Error:** No error at compile time, but the crate publishes as binary-only. Downstream callers doing `biochip = "0.2"` cannot `use polar_bear_biochip::...`.
+**Error:** No error at compile time, but the crate publishes as binary-only. Downstream callers doing `biochip = "0.2"` cannot `use biochip::...`.
 **Root cause:** `src/lib.rs` exists and exports the full public API, but `Cargo.toml` only declared `[[bin]]`. Without an explicit `[lib]` section, Cargo infers a lib target from `src/lib.rs` in a mixed crate — however, declaring it explicitly is required for docs.rs feature-gating and for clean crates.io publication metadata.
 **Fix:**
 ```toml
 [lib]
-name = "polar_bear_biochip"
+name = "biochip"
 path = "src/lib.rs"
 ```

@@ -11,7 +11,7 @@
 //! ```
 
 /// Demonstrates ECDSA secp256k1 provenance using a simulated ARC sensor fusion.
-use polar_bear_biochip::{
+use biochip::{
     provenance::{EcdsaSigner, EcdsaVerifier},
     sensors::fusion::SensorFusion,
     types::{AlertLevel, InferenceResult},

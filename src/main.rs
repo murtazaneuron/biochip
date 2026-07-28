@@ -14,14 +14,14 @@
 use std::path::Path;
 
 use anyhow::Result;
-use clap::{Parser, Subcommand};
-use polar_bear_biochip::{
+use biochip::{
     agent::BioChipAgent,
     provenance::{EcdsaSigner, EcdsaVerifier},
     sensors::SensorFusion,
     types::SignedOutput,
     // types::AlertLevel,
 };
+use clap::{Parser, Subcommand};
 use sha2::Digest;
 use tracing::{info, warn};
 
@@ -86,7 +86,7 @@ async fn main() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::from_default_env()
-                .add_directive("polar_bear_biochip=info".parse()?),
+                .add_directive("biochip=info".parse()?),
         )
         .init();
 

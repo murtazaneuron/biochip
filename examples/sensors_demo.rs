@@ -5,7 +5,7 @@
 //! ```
 
 /// Demonstrates the sensor fusion process without requiring an API key.
-use polar_bear_biochip::sensors::fusion::SensorFusion;
+use biochip::sensors::fusion::SensorFusion;
 
 /// Runs the sensor fusion demo, sampling 5 cycles and displaying the results.
 fn main() {

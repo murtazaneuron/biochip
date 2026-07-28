@@ -103,7 +103,7 @@ impl SensorFusion {
 /// with freshly initialised sensors.
 ///
 /// ```
-/// use polar_bear_biochip::sensors::SensorFusion;
+/// use biochip::sensors::SensorFusion;
 ///
 /// let fusion = SensorFusion::default();
 /// ```

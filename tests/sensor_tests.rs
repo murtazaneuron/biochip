@@ -1,6 +1,6 @@
 //! Integration tests - sensor layer
 
-use polar_bear_biochip::{
+use biochip::{
     sensors::{accelerometer::AccelerometerSensor, bci::BciSensor, fusion::SensorFusion},
     types::ActivityState,
 };
